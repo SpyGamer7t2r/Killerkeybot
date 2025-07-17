@@ -1,4 +1,3 @@
-
 import asyncio
 import os
 import re
@@ -23,8 +22,7 @@ class YouTubeAPI:
         ]
         try:
             output = await run_subprocess(cmd)
-            urls = output.strip().split("
-")
+            urls = output.strip().split("\n")  # 🛠 fixed string here
             if len(urls) >= 2:
                 return {"video": urls[0], "audio": urls[1]}
             elif len(urls) == 1:

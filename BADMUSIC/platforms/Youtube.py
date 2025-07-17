@@ -55,3 +55,36 @@ class YouTube:
         except Exception as e:
             print(f"[YouTube.playlist] Error: {e}")
             return []
+async def track(self, query: str):
+    try:
+        results = VideosSearch(query, limit=1)
+        result = (await results.next())["result"][0]
+
+        title = result["title"]
+        duration = result["duration"]  # Example: "3:45"
+        views = result["viewCount"]["short"]
+        thumbnail = result["thumbnails"][0]["url"]
+        channel = result["channel"]["name"]
+        link = result["link"]
+        video_id = result["id"]
+
+        # Calculate duration in min and sec
+        minutes, seconds = map(int, duration.split(":")) if ":" in duration else (0, 0)
+        duration_min = minutes
+        duration_sec = seconds
+
+        details = {
+            "title": title,
+            "duration": duration,
+            "duration_min": duration_min,
+            "duration_sec": duration_sec,
+            "views": views,
+            "thumbnail": thumbnail,
+            "channel": channel,
+            "link": link,
+        }
+
+        return details, video_id
+    except Exception as e:
+        print(f"[YouTube.track] Error: {e}")
+        return None, None

@@ -20,25 +20,22 @@ class YouTube:
             result = (await results.next())["result"][0]
 
             title = result["title"]
-            duration = result["duration"]  # e.g., "3:45"
+            duration = result["duration"]
             views = result["viewCount"]["short"]
             thumbnail = result["thumbnails"][0]["url"]
             channel = result["channel"]["name"]
             link = result["link"]
             video_id = result["id"]
 
-            # Convert duration to minutes and seconds
+            # Convert duration string to minutes and seconds
+            minutes, seconds = 0, 0
             if ":" in duration:
-                parts = duration.split(":")
+                parts = list(map(int, duration.split(":")))
                 if len(parts) == 2:
-                    minutes, seconds = map(int, parts)
+                    minutes, seconds = parts
                 elif len(parts) == 3:
-                    hours, minutes, seconds = map(int, parts)
+                    hours, minutes, seconds = parts
                     minutes += hours * 60
-                else:
-                    minutes, seconds = 0, 0
-            else:
-                minutes, seconds = 0, 0
 
             details = {
                 "title": title,
@@ -49,6 +46,7 @@ class YouTube:
                 "thumbnail": thumbnail,
                 "channel": channel,
                 "link": link,
+                "vidid": video_id,  # ✅ Important for play.py
             }
 
             return details, video_id
@@ -62,7 +60,7 @@ class YouTube:
                 "extract_flat": True,
                 "quiet": True,
                 "force_generic_extractor": True,
-                "cookiefile": "cookies.txt",  # ✅ Cookies support
+                "cookiefile": "cookies.txt",  # ✅ Use cookies
             }
             with YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=False)
@@ -70,3 +68,16 @@ class YouTube:
         except Exception as e:
             print(f"[YouTube.playlist] Error: {e}")
             return []
+
+    async def exists(self, url: str):
+        try:
+            ydl_opts = {
+                "quiet": True,
+                "cookiefile": "cookies.txt"
+            }
+            with YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=False)
+            return True if info else False
+        except Exception as e:
+            print(f"[YouTube.exists] Error: {e}")
+            return False

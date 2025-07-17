@@ -16,15 +16,16 @@ links = {}
 @app.on_chat_member_updated()
 async def auto_join_on_admin_status(client, chat_member_update: ChatMemberUpdated):
     if (
-        if chat_member_update.new_chat_member and chat_member_update.new_chat_member.user:
-    if chat_member_update.new_chat_member.user.id == app.id:
-        return
+        chat_member_update.new_chat_member
+        and chat_member_update.new_chat_member.user
+        and chat_member_update.new_chat_member.user.id == app.id
         and chat_member_update.new_chat_member.status == ChatMemberStatus.ADMINISTRATOR
     ):
-        chat_id = chat_member_update.chat.id
-        userbot = await get_assistant(chat_id)
-        userbot_id = userbot.id
+        return
 
+    chat_id = chat_member_update.chat.id
+    userbot = await get_assistant(chat_id)
+    userbot_id = userbot.id
         # Attempt to invite the assistant automatically
         try:
             if chat_member_update.chat.username:

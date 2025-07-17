@@ -71,7 +71,7 @@ class BADBOT(Client):
                     ),
                     InlineKeyboardButton(
                         text="๏ ᴜᴘᴅᴀᴛᴇ ๏",
-                        url=f"https://t.me/HEROKUBIN_01",
+                        url=f"https://t.me/dark_x_knight_musiczz_support",
                     )
               ],
                 [

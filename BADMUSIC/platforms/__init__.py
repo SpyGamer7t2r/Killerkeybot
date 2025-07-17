@@ -10,11 +10,11 @@ from .Youtube import YouTube
 
 class PlaTForms:
     def __init__(self):
-        self.apple = Apple()
+        self.Apple = Apple()
         self.carbon = Carbon()
-        self.saavn = Saavn()
-        self.resso = Resso()
-        self.soundcloud = SoundCloud()
-        self.spotify = Spotify()
+        self.Saavn = Saavn()
+        self.Resso = Resso()
+        self.Soundcloud = SoundCloud()
+        self.Spotify = Spotify()
         self.telegram = Telegram()
-        self.youtube = YouTube()
+        self.Youtube = YouTube()

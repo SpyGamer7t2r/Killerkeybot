@@ -16,7 +16,9 @@ links = {}
 @app.on_chat_member_updated()
 async def auto_join_on_admin_status(client, chat_member_update: ChatMemberUpdated):
     if (
-        chat_member_update.new_chat_member.user.id == app.id
+        if chat_member_update.new_chat_member and chat_member_update.new_chat_member.user:
+    if chat_member_update.new_chat_member.user.id == app.id:
+        return
         and chat_member_update.new_chat_member.status == ChatMemberStatus.ADMINISTRATOR
     ):
         chat_id = chat_member_update.chat.id

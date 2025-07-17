@@ -1,58 +1,64 @@
-import asyncio
 import os
-import time
-from typing import Union
+import asyncio
 
-from pyrogram.types import Message
-
-from config import DURATION_LIMIT
 from BADMUSIC import app
 from BADMUSIC.core.call import BAD
-from BADMUSIC.core.platform import Platform  # Update if Platform defined elsewhere
-from BADMUSIC.misc import db
-from BADMUSIC.misc.sudoers import SUDOERS
-from BADMUSIC.utils.database import is_active_chat, add_active_video_chat
-from BADMUSIC.utils.exceptions import AssistantErr
-from BADMUSIC.utils.inline.play import stream_markup
-from BADMUSIC.utils.stream.downloader import get_youtube_stream
+from BADMUSIC.utils.database import is_video_allowed
+from config import DURATION_LIMIT
 
-# Example stream function
+from BADMUSIC.platforms import PlaTForms  # ✅ Corrected import
+platform = PlaTForms()
+
+
 async def stream(
     client,
-    message: Message,
-    chat_id: int,
-    user_id: int,
-    result: dict,
-    video: bool,
-    streamtype: str
-) -> None:
+    m,
+    streamtype,
+    playertype,
+    videoid,
+    user_id,
+    query,
+    chat_id,
+    duration,
+    link,
+    streamcall,
+    spotify=None,
+):
     try:
-        title = result["title"]
-        duration = result["duration"]
-        url = result["url"]
-        source = result["source"]
-        video_id = result["id"]
-        thumbnail = result.get("thumb") or result.get("thumbnail") or "https://telegra.ph/file/3dfd7e1a3eac3085dcd16.jpg"
+        if streamtype == "telegram":
+            details, videoid = await platform.telegram.track(m)
+        elif streamtype == "soundcloud":
+            details, videoid = await platform.soundcloud.track(link)
+        elif streamtype == "youtube":
+            details, videoid = await platform.youtube.track(link)
+        elif streamtype == "spotify":
+            details, videoid = await platform.spotify.track(link)
+        elif streamtype == "apple":
+            details, videoid = await platform.apple.track(link)
+        elif streamtype == "saavn":
+            details, videoid = await platform.saavn.track(link)
+        elif streamtype == "resso":
+            details, videoid = await platform.resso.track(link)
+        elif streamtype == "carbon":
+            details, videoid = await platform.carbon.track(link)
+        else:
+            await m.reply_text("❌ Invalid stream source!")
+            return
 
-        if not url:
-            raise ValueError("No streamable URL found")
+        # ✅ Prevent KeyError if 'thumb' is missing
+        thumbnail = details.get("thumb") or "https://te.legra.ph/file/36c2ff5d9c8fba9c221bc.jpg"
 
-        await BAD.join_call(
-            chat_id,
-            url,
-            video=video,
-            stream_type=streamtype,
-            title=title,
-            thumb=thumbnail,
-        )
+        title = details.get("title", "Unknown Title")
+        link = details.get("link", "")
+        duration_min = details.get("duration_min", "0:00")
 
-        await add_active_video_chat(chat_id)
+        # Here you would call the streaming function
+        await BAD.play_stream(chat_id, videoid, streamcall)
 
-        await message.reply_photo(
+        # Optional: Send success message
+        await m.reply_photo(
             photo=thumbnail,
-            caption=f"🎧 **Started Streaming:** `{title}`\n📫 **Requested by:** {message.from_user.mention}",
-            reply_markup=stream_markup(video_id, user_id),
+            caption=f"🎶 Now Playing: {title}\n⏱ Duration: {duration_min}",
         )
-
     except Exception as e:
-        await message.reply(f"⚠️ Error while streaming: `{e}`")
+        await m.reply_text(f"🚫 Failed to stream.\n\n**Error:** `{str(e)}`")

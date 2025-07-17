@@ -1,4 +1,4 @@
-import asynci
+import asyncio
 import re
 from youtubesearchpython.__future__ import VideosSearch
 from yt_dlp import YoutubeDL

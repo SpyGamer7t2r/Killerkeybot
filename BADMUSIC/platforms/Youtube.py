@@ -341,7 +341,7 @@ class YouTube:
             return xyz
 
         def song_video_dl():
-            formats = f"{format_id}+140"
+            formats = "bestaudio/best"
             fpath = f"downloads/{title}"
             ydl_optssx = {
                 "format": formats,

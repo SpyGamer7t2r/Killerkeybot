@@ -10,26 +10,26 @@ load_dotenv()
 
 # Get it from my.telegram.org
 
-API_ID = int(getenv("API_ID", ""))
+API_ID = int(getenv("API_ID", "22565342"))
 
-API_HASH = getenv("API_HASH")
+API_HASH = getenv("API_HASH","75e035926f72f2f4155a6f5f6e64be03")
 
 
 ## Get it from @Botfather in Telegram.
-BOT_TOKEN = getenv("BOT_TOKEN")
+BOT_TOKEN = getenv("BOT_TOKEN","7684739810:AAG9p4WZU4-u1s9-JXzU3l9Hig7yCjSb2Yo")
 
 # Get Your bot username
-BOT_USERNAME = getenv("BOT_USERNAME" , "FlopMusic_Bot")
+BOT_USERNAME = getenv("BOT_USERNAME" , "Infinity_X_Destiny_Bot")
 
 # Bot id
-BOT_ID = int(getenv("BOT_ID", "7634367413"))
+BOT_ID = int(getenv("BOT_ID", "7684739810"))
 
 # Token allow for access youtube songs. [ True = use token data, False = use cookies ]
 TOKEN_ALLOW = os.getenv("TOKEN_ALLOW", "False")
 
 # Database to save your chats and stats... Get MongoDB:-  https://telegra.ph/How-To-get-Mongodb-URI-04-06
 DB_NAME = "badDB"
-MONGO_DB_URI = getenv("MONGO_DB_URI", None)
+MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://knight4563:knight4563@cluster0.a5br0se.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 # Time zone (india)
 TIME_ZONE = "Asia/Kolkata"
@@ -73,12 +73,12 @@ SONG_DOWNLOAD_DURATION = int(
 
 
 # You'll need a Private Group ID for this.
-LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", ""))
+LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", "-1002781150474"))
 
 
 # Your User ID.
 OWNER_ID = list(
-    map(int, getenv("OWNER_ID", "7009601543").split())
+    map(int, getenv("OWNER_ID", "7487670897").split())
 )  # Input type must be interger
 
 
@@ -182,7 +182,7 @@ SET_CMDS = getenv("SET_CMDS", "False")
 
 
 # You'll need a Pyrogram String Session for these vars. Generate String from our session generator bot @VIPStringBot
-STRING1 = getenv("STRING_SESSION", None)
+STRING1 = getenv("STRING_SESSION", "BQFYUd4AC68E3CzCrdtJSCj7EpKfhi_Vy8EVgF-JMFrDJDAsmP98ZNTP28pOPC92xnnpFiyetUyp1H6YoNol0YnG984uWI-WatXAuqoVPYVgLquWC1OR4XEsq-Ex2O3By5anXltoagCT0j_YinmxgpXMwrM2e6aWjHshplknALJ0X6A35QUGpdO5yNpM9wqgjfgLM_160U6LUuiVEoYYv27KacT9Bymc6z8Y73ikcFPsbE_JcfEbT0eWfWvDIOiZBc6x9UbB40XqQGz9qrrwZe9wuBRmv7y-l_VaFUS59wQMkkDJsQGqGBHoTHato4zJ8lA_PN6vOkLBCmbM3F9VYnMrDc8txgAAAAG-K06AAA")
 STRING2 = getenv("STRING_SESSION2", None)
 STRING3 = getenv("STRING_SESSION3", None)
 STRING4 = getenv("STRING_SESSION4", None)

@@ -15,10 +15,12 @@ links = {}
 # Monitor bot's admin status change
 @app.on_chat_member_updated()
 async def auto_join_on_admin_status(client, chat_member_update: ChatMemberUpdated):
+    bot_id = (await client.get_me()).id  # 🔥 yeh line sahi ID fetch karegi
+
     if (
         chat_member_update.new_chat_member
         and chat_member_update.new_chat_member.user
-        and chat_member_update.new_chat_member.user.id == app.id
+        and chat_member_update.new_chat_member.user.id == bot_id  # 🔄 yahan app.id ka replace
         and chat_member_update.new_chat_member.status == ChatMemberStatus.ADMINISTRATOR
     ):
         return
@@ -26,6 +28,15 @@ async def auto_join_on_admin_status(client, chat_member_update: ChatMemberUpdate
     chat_id = chat_member_update.chat.id
     userbot = await get_assistant(chat_id)
     userbot_id = userbot.id
+
+    try:
+        if chat_member_update.chat.username:
+            await userbot.join_chat(chat_member_update.chat.username)
+        else:
+            invite_link = await app.create_chat_invite_link(chat_id, expire_date=None)
+            await userbot.join_chat(invite_link.invite_link)
+    except Exception as e:
+        print(f"Failed to auto-join assistant: {e}")
         # Attempt to invite the assistant automatically
         try:
             if chat_member_update.chat.username:

@@ -73,10 +73,22 @@ async def download_song(_, message):
         return
     await m.edit("**📥 ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ...**")
     try:
-        with yt_dlp.YoutubeDL(ydl_ops) as ydl:
-            info_dict = ydl.extract_info(link, download=False)
-            audio_file = ydl.prepare_filename(info_dict)
-            ydl.process_info(info_dict)
+        ydl_opts = {
+            "format": "bestaudio[ext=m4a]",
+            "cookiefile": "cookies.txt",  # ✅ Add if needed
+            "outtmpl": "%(title)s.%(ext)s",
+            "quiet": True,
+            "no_warnings": True,
+            "ignoreerrors": True,
+        }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(link, download=True)
+            audio_file = ydl.prepare_filename(info)
+
+        if not os.path.exists(audio_file):
+            await m.edit("❌ Failed to download the audio file.")
+            return
         secmul, dur, dur_arr = 1, 0, duration.split(":")
         for i in range(len(dur_arr) - 1, -1, -1):
             dur += int(float(dur_arr[i])) * secmul

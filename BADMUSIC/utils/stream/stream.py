@@ -3,7 +3,8 @@ import os
 
 from pyrogram.types import InlineKeyboardMarkup
 from config import DURATION_LIMIT
-from BADMUSIC import app, Platform, db, SUDOERS, BAD
+from BADMUSIC import app, Platform, SUDOERS, BAD
+from BADMUSIC.misc import db
 from BADMUSIC.utils.database import is_active_chat, put_queue
 from BADMUSIC.utils.exceptions import AssistantErr
 from BADMUSIC.utils.inline.play import stream_markup, close_markup

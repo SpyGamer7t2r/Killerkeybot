@@ -2,11 +2,9 @@ import re
 from youtubesearchpython.__future__ import VideosSearch
 from yt_dlp import YoutubeDL
 
-
 class YouTube:
     async def url(self, message):
         try:
-            # Agar user directly YouTube link bhejta hai
             if message.text:
                 urls = re.findall(r"(https?://\S+)", message.text)
                 if urls:
@@ -49,6 +47,7 @@ class YouTube:
                 "extract_flat": True,
                 "quiet": True,
                 "force_generic_extractor": True,
+                "cookiefile": "cookies.txt",  # ✅ Using cookies.txt for age-restricted content
             }
             with YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=False)

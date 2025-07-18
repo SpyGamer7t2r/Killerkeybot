@@ -8,13 +8,14 @@ async def yt_stream(client, message, query):
         result = await youtube.track(query)
 
         if not result or "title" not in result or "stream_url" not in result:
-            return await message.reply_text("❌ YouTube track not found or invalid format.")
+            await message.reply_text(f"❌ Debug Info:\n{result}")
+            return
 
-        # Show short debug info (optional)
+        # Optional: Short debug info
         await message.reply_text(
             f"✅ Title: {result.get('title')}\n"
             f"🕒 Duration: {result.get('duration')} sec\n"
-            f"🔗 Stream: {bool(result.get('stream_url'))}"
+            f"🔗 Stream URL: {bool(result.get('stream_url'))}"
         )
 
         return await stream(
@@ -28,5 +29,6 @@ async def yt_stream(client, message, query):
             playmode="Audio",
             query=query,
         )
+
     except Exception as e:
         await message.reply_text(f"❌ Error: {str(e)[:400]}")

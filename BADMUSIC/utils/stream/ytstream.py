@@ -6,8 +6,8 @@ youtube = YouTube()
 async def yt_stream(client, message, query):
     try:
         result = await youtube.track(query)
-        if "error" in result:
-            return await message.reply_text(result["error"])
+        if not result or "title" not in result:
+            return await message.reply_text("❌ YouTube track not found or invalid format.")
 
         return await stream(
             client,
@@ -15,7 +15,7 @@ async def yt_stream(client, message, query):
             title=result["title"],
             videoid=result["id"],
             user_id=message.from_user.id,
-            duration=result["duration_min"],
+            duration=result.get("duration") or result.get("duration_min"),
             streamtype="youtube",
             playmode="Audio",
             query=query,

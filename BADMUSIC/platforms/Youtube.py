@@ -1,5 +1,6 @@
 import asyncio
 import re
+import traceback
 from yt_dlp import YoutubeDL
 from youtubesearchpython.__future__ import VideosSearch
 from BADMUSIC.platforms.Spotify import Spotify
@@ -13,7 +14,8 @@ class YouTube:
             "quiet": True,
             "geo_bypass": True,
             "nocheckcertificate": True,
-            "cookiefile": self.cookies_path,
+            # Comment cookies for test
+            # "cookiefile": self.cookies_path,
             "default_search": "ytsearch",
         }
 
@@ -25,11 +27,9 @@ class YouTube:
                 lambda: YoutubeDL(self.ytdl_opts).extract_info(link, download=False),
             )
 
-            # Handle playlists or multiple entries
             if "entries" in data:
                 data = data["entries"][0]
 
-            # Safely extract fields with defaults
             title = data.get("title") or "Unknown Title"
             duration = data.get("duration") or 0
             stream_url = data.get("url")
@@ -49,8 +49,8 @@ class YouTube:
                 "thumbnail": thumbnail,
                 "id": video_id,
             }
-        except Exception as e:
-            return {"error": f"❌ Error: {str(e)}"}
+        except Exception:
+            return {"error": f"❌ Exception:\n{traceback.format_exc()}"}
 
     async def track(self, query: str):
         return await self.url(query)
@@ -61,8 +61,8 @@ class YouTube:
             results = await search.next()
             links = [video["link"] for video in results["result"]]
             return [await self.url(link) for link in links]
-        except Exception as e:
-            return {"error": f"❌ Error: {str(e)}"}
+        except Exception:
+            return {"error": f"❌ Exception:\n{traceback.format_exc()}"}
 
     async def smart_track(self, link_or_query: str):
         try:
@@ -78,8 +78,8 @@ class YouTube:
                 return await self.url(link_or_query)
             else:
                 return await self.track(link_or_query)
-        except Exception as e:
-            return {"error": f"❌ Error: {str(e)}"}
+        except Exception:
+            return {"error": f"❌ Exception:\n{traceback.format_exc()}"}
 
     def _resize_thumb(self, thumb_url):
         if not thumb_url:

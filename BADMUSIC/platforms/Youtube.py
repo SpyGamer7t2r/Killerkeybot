@@ -2,8 +2,8 @@ import asyncio
 import re
 from yt_dlp import YoutubeDL
 from youtubesearchpython.__future__ import VideosSearch
-from BADMUSIC.platforms.spotify import Spotify
-from BADMUSIC.platforms.apple import Apple
+from BADMUSIC.platforms.Spotify import Spotify
+from BADMUSIC.platforms.Apple import Apple
 
 
 class YouTube:

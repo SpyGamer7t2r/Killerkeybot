@@ -8,8 +8,8 @@ async def yt_stream(client, message, query):
         result = await youtube.track(query)
 
         if not result or "title" not in result or "stream_url" not in result:
-    await message.reply_text(f"❌ Debug Info:\n{str(result)[:400]}")
-    return
+            await message.reply_text(f"❌ Debug Info:\n{str(result)[:400]}")
+            return
 
         # Optional: Short debug info
         await message.reply_text(

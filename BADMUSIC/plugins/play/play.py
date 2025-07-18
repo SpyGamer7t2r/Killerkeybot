@@ -9,7 +9,6 @@ from BADMUSIC.utils.decorators import language
 from BADMUSIC.utils.stream.stream import stream
 from BADMUSIC.utils.stream.ytstream import yt_stream
 from BADMUSIC.utils.inline.play import stream_markup
-from BADMUSIC.utils.stream.filters import command
 
 @app.on_message(
     command(["play", "vplay", "cplay"]) & filters.group & ~BANNED_USERS

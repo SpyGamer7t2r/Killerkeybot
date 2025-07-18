@@ -25,18 +25,29 @@ class YouTube:
                 lambda: YoutubeDL(self.ytdl_opts).extract_info(link, download=False),
             )
 
-            # Fix for playlist or ytsearch results
+            # Handle playlists or multiple entries
             if "entries" in data:
                 data = data["entries"][0]
 
+            # Safely extract fields with defaults
+            title = data.get("title") or "Unknown Title"
+            duration = data.get("duration") or 0
+            stream_url = data.get("url")
+            webpage_url = data.get("webpage_url")
+            thumbnail = self._resize_thumb(data.get("thumbnail"))
+            video_id = data.get("id") or ""
+
+            if not stream_url or not title:
+                return {"error": "❌ Failed to extract valid video info."}
+
             return {
-                "title": data.get("title", "Unknown Title"),
-                "duration": data.get("duration", 0),
-                "duration_min": round(data.get("duration", 0) / 60, 2),
-                "url": data.get("webpage_url"),
-                "stream_url": data.get("url"),
-                "thumbnail": self._resize_thumb(data.get("thumbnail")),
-                "id": data.get("id", ""),
+                "title": title,
+                "duration": duration,
+                "duration_min": round(duration / 60, 2),
+                "url": webpage_url,
+                "stream_url": stream_url,
+                "thumbnail": thumbnail,
+                "id": video_id,
             }
         except Exception as e:
             return {"error": f"❌ Error: {str(e)}"}
@@ -54,18 +65,21 @@ class YouTube:
             return {"error": f"❌ Error: {str(e)}"}
 
     async def smart_track(self, link_or_query: str):
-        if "spotify.com/track" in link_or_query:
-            spotify = Spotify()
-            details = await spotify.track(link_or_query)
-            return await self.track(f"{details.get('title')} {details.get('artist')}")
-        elif "music.apple.com" in link_or_query:
-            apple = Apple()
-            details = await apple.track(link_or_query)
-            return await self.track(details.get("title"))
-        elif "youtube.com" in link_or_query or "youtu.be" in link_or_query:
-            return await self.url(link_or_query)
-        else:
-            return await self.track(link_or_query)
+        try:
+            if "spotify.com/track" in link_or_query:
+                spotify = Spotify()
+                details = await spotify.track(link_or_query)
+                return await self.track(f"{details.get('title')} {details.get('artist')}")
+            elif "music.apple.com" in link_or_query:
+                apple = Apple()
+                details = await apple.track(link_or_query)
+                return await self.track(details.get("title"))
+            elif "youtube.com" in link_or_query or "youtu.be" in link_or_query:
+                return await self.url(link_or_query)
+            else:
+                return await self.track(link_or_query)
+        except Exception as e:
+            return {"error": f"❌ Error: {str(e)}"}
 
     def _resize_thumb(self, thumb_url):
         if not thumb_url:

@@ -6,7 +6,11 @@ youtube = YouTube()
 async def yt_stream(client, message, query):
     try:
         result = await youtube.track(query)
-        if not result or "title" not in result:
+
+        # Debug print to see what's being returned
+        await message.reply_text(f"🔍 Debug result:\n{result}")
+
+        if not result or "title" not in result or "stream_url" not in result:
             return await message.reply_text("❌ YouTube track not found or invalid format.")
 
         return await stream(

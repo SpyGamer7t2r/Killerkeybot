@@ -67,3 +67,49 @@ class YouTube:
         elif len(parts) == 2:
             return parts[0] + parts[1] / 60
         return float(parts[0])
+import yt_dlp
+from youtubesearchpython.__future__ import VideosSearch
+
+
+class YouTube:
+    def __init__(self):
+        self.cookies_path = "cookies/cookies.txt"
+
+    async def url(self, link: str):
+        try:
+            ydl_opts = {
+                "format": "bestaudio/best",
+                "quiet": True,
+                "noplaylist": True,
+                "cookiefile": self.cookies_path,
+            }
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(link, download=False)
+            return {
+                "title": info.get("title"),
+                "duration": info.get("duration"),
+                "id": info.get("id"),
+                "url": info.get("webpage_url"),
+                "thumbnail": info.get("thumbnail"),
+                "source": info.get("url"),
+            }
+        except Exception as e:
+            return {"error": str(e)}
+
+    async def track(self, query: str):
+        try:
+            # Use ytsearch to avoid invalid URL error
+            search = VideosSearch(query, limit=1)
+            result = (await search.next())["result"][0]
+            return await self.url(result["link"])
+        except Exception as e:
+            return {"error": str(e)}
+
+    async def playlist(self, query: str):
+        try:
+            search = VideosSearch(query, limit=5)
+            results = await search.next()
+            links = [video["link"] for video in results["result"]]
+            return [await self.url(link) for link in links]
+        except Exception as e:
+            return {"error": str(e)}

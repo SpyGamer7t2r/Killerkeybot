@@ -1,4 +1,4 @@
-from BADMUSIC.platforms.youtube import YouTube
+from BADMUSIC.platforms.Youtube import YouTube
 from BADMUSIC.utils.stream.stream import stream
 
 youtube = YouTube()
